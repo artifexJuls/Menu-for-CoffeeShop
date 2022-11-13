@@ -1,5 +1,6 @@
 import os.path
 import random
+import time
 
 from easygui import *
 import json
@@ -123,9 +124,12 @@ while True:
                     with open(clientsPath, 'r', encoding='utf-8') as file1:
                         file2 = json.load(file1)
                         if str(clients_code) in file2:
-                            key = file2.get(clients_code).get("Code")
+                            discount = file2.get(clients_code).get("Сума")/500
+                            if discount > 20:
+                                discount = 20
+
                             name = file2.get(clients_code).get("Ім`я")
-                            msgbox(f'{name} {key}')
+                            msgbox(f'{name}, знижка {discount}%')
                 elif choice2 == 'Перейти до оплати':
                     pass
 
@@ -137,15 +141,38 @@ while True:
                         for txt in pay_r:
                             info_chek += f'{txt} - {pay_r.get(txt).get("Ціна")} {pay_r.get(txt).get("Валюта")}\n'
                             summ_tovar += pay_r.get(txt).get("Ціна")
-                        if key == 0:
+                        with open(clientsPath, 'r', encoding='utf8') as file1:
+                            pay_r = json.load(file1)
+                        if clients_code not in pay_r:
                             msgbox(
-                                f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{key}',
-                                'CoffeeShop', 'Оплата',image='images\\money.gif')
+                                f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка: 0%',
+                                'CoffeeShop', 'Оплата', image='images\\money.gif')
                         else:
+                            summ_zn = summ_tovar - (summ_tovar * (discount / 100))
                             msgbox(
-                            f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{file2[key].get("Знижка")}',
-                            'CoffeeShop', 'Оплата',image='images\\money.gif')
-                            # msgbox(f"{pay_r[key].get('Знижка')} , {type(pay_r[key].get('Знижка'))}")
+                            f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{discount}% \n Сума до оплати з урахування знижки - {summ_zn}', 'CoffeeShop', 'Оплата', image='images\\money.gif')
+                    msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
+                    # pay = input("Зчитування")
+                    pay = "Ok"
+                    if pay == "Ok":
+                        if clients_code in pay_r:
+                                pay_r[clients_code]['Сума'] = pay_r[clients_code]['Сума'] + summ_tovar
+                                with open(clientsPath, 'w', encoding='utf8') as file1:
+                                    json.dump(pay_r, file1)
+                        msgbox("Оплата пройшла успішно, Приємного", image='images\\Cjey.gif')
+                        del_cosh = {}
+                        with open(koshel, 'w', encoding='utf8') as file1:
+                            json.dump(del_cosh, file1)
+                    else:
+                        time.sleep(5)
+                        del_cosh = {}
+                        with open(koshel, 'w', encoding='utf8') as file1:
+                            json.dump(del_cosh, file1)
+
+                        msgbox("Термін очікування вичерпано, вас поставлено на лічильник, наші люди йдуть до вас ,АТБ,")
+
+
+
 
             elif choice == 'Відміна':
                 clear_koshel()
