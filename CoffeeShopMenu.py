@@ -29,24 +29,13 @@ while True:
                     coffe(choice)
 
                 elif choice == "Смаколики":
-                    but = []
-                    [but.append(i) for i in base_menu[choice].keys()]
-                    but.append("Відміна")
-                    lst = ""
-                    for txt in base_menu.get(choice):
-                        lst += f'{txt} - {base_menu.get(choice).get(txt).get("Ціна")} {base_menu.get(choice).get(txt).get("Валюта")}\n'
-                    choise = buttonbox(lst, "CoffeeShop", but, cmakolikmenu)
-                    if choise != "Відміна":
-                        counting(choice)
-                    else:
-                        continue
+                    smacolik(choice)
 
                     discount()
                     receipt()
                     msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
                     # pay = input("Зчитування")
                     payment()
-
                 elif choice == 'Відміна':
                     cleaning_basket()
                     break

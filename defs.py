@@ -30,10 +30,42 @@ def coffe(choice):
     elif choise == "Відміна":
         choice = "Відміна"
     print("choise", choise)
-    lst_menu_in_milk = ["Капучино", "Латте"]
+    lst_menu_in_milk = ["Капучино", "Латте", "Флет Уайт", "Раф кава"]
     if choise in lst_menu_in_milk:
         choice_of_milk(choise)
+    else:
+        milk_yes_no = buttonbox("Бажаєте молоко до кави?",'Milk',['Так','Ні'],image='images\\35.gif')
+        if milk_yes_no == "Так":
+            choice_of_milk(choise)
+        else:
+            pass
 
+def choice_of_milk(choise):
+    milk = buttonbox(f"З якого молока вам приготувати {choise}", 'Milk',
+                     ['Кокосове', 'Бананове', 'Вівсяне', 'Мигдальне','Простому'], image='images\\37.gif')
+    if milk == 'Кокосове':
+        msgbox(f'Ви вибрали {choise} на Кокосовому молоці')
+    elif milk == 'Бананове':
+        msgbox(f'Ви вибрали {choise} на Банановому молоці', image='images\\34.gif')
+    elif milk == 'Вівсяне':
+        msgbox(f'Ви вибрали {choise} на Вівсяному молоці', image='images\\36.gif')
+    elif milk == 'Мигдальне':
+        msgbox(f'Ви вибрали {choise} на Мигдальному молоці', image='images\\35.gif')
+    elif milk == 'Простому':
+        msgbox(f'Ви вибрали {choise} на Простому молоці', image='images\\35.gif')
+
+    return 'Done'
+
+def smacolik(choice):
+    but = []
+    [but.append(i) for i in base_menu[choice].keys()]
+    but.append("Відміна")
+    lst = ""
+    for txt in base_menu.get(choice):
+        lst += f'{txt} - {base_menu.get(choice).get(txt).get("Ціна")} {base_menu.get(choice).get(txt).get("Валюта")}\n'
+    choise = buttonbox(lst, "CoffeeShop", but, cmakolikmenu)
+    if choise != "Відміна":
+        counting(choice, choise)
 
 
 def counting(choice, choise):
@@ -66,24 +98,6 @@ def cleaning_basket():
     data.clear()
     with open(koshel, "w", encoding='utf-8') as menu:
         json.dump(data, menu, ensure_ascii=False)
-
-    return 'Done'
-
-
-
-
-
-def choice_of_milk(choise):
-    milk = buttonbox(f"З якого молока вам приготувати {choise}", 'Milk',
-                     ['Кокосове', 'Бананове', 'Вівсяне', 'Мигдальне'], image='images\\37.gif')
-    if milk == 'Кокосове':
-        msgbox(f'Ви вибрали {choise} на Кокосовому молоці')
-    elif milk == 'Бананове':
-        msgbox(f'Ви вибрали {choise} на Банановому молоці', image='images\\34.gif')
-    elif milk == 'Вівсяне':
-        msgbox(f'Ви вибрали {choise} на Вівсяному молоці', image='images\\36.gif')
-    elif milk == 'Мигдальне':
-        msgbox(f'Ви вибрали {choise} на Мигдальному молоці', image='images\\35.gif')
 
     return 'Done'
 
