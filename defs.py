@@ -114,8 +114,9 @@ def smacolik(choice):
 
 def discount():
     key = 0
+    print("1")
     choice2 = buttonbox('Чи є у вас карта на знижку?', 'CoffeShop',
-                        ['Бажаєте зареєструвати', 'Я маю знижку', 'Перейти до оплати'],
+                        ['Бажаєте зареєструвати', 'Я маю знижку'],
                         image='images\\signing-icon-anim.gif')
     if choice2 == 'Бажаєте зареєструвати':
         with open(clientsPath, 'r', encoding='utf-8') as file1:
@@ -140,12 +141,12 @@ def discount():
 
                 name = file2.get(clients_code).get("Імя")
                 msgbox(f'{name}, знижка {discount}%')
-    elif choice2 == 'Перейти до оплати':
-        discount = 0
-        clients_code = ""
-    receipt(discount, clients_code)
-
-    return clients_code
+    #elif choice2 == 'Перейти до оплати':
+        # discount = 0
+        # clients_code = 0
+    print("2")
+    lst_d_c = [discount, clients_code]
+    return lst_d_c
 
 
 def receipt(discount, clients_code):
@@ -239,3 +240,8 @@ def delete():
     return 'done'
 def storage():
     return 'done'
+
+
+# lst_d_c = [0, 0]
+# discount = lst_d_c[0]
+# clients_code = lst_d_c[1]
