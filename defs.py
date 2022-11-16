@@ -1,4 +1,3 @@
-# from CoffeeShopMenu import *
 import os.path
 import random
 import time
@@ -127,7 +126,8 @@ def discount():
         file2[key] = {'Ім`я': name, 'Знижка': 0, 'Сума': 0}
         with open(clientsPath, 'w', encoding='utf-8') as file3:
             json.dump(file2, file3, ensure_ascii=False)
-        clients_code = ""
+        clients_code = key
+        discount = 0
     elif choice2 == 'Я маю знижку':
         clients_code = enterbox('Введіть свій код на знижку')
         with open(clientsPath, 'r', encoding='utf-8') as file1:
@@ -149,47 +149,54 @@ def discount():
 
 
 def receipt(discount, clients_code):
-    while True:
-        with open(koshel, 'r', encoding='utf8') as file1:
+    with open(koshel, 'r', encoding='utf8') as file1:
+        pay_r = json.load(file1)
+        summ_tovar = 0.0
+        info_chek = ''
+        for txt in pay_r:
+            info_chek += f'{txt} - {pay_r.get(txt).get("Ціна")} {pay_r.get(txt).get("Валюта")}\n'
+            summ_tovar += pay_r.get(txt).get("Ціна")
+        with open(clientsPath, 'r', encoding='utf8') as file1:
             pay_r = json.load(file1)
-            summ_tovar = 0.0
-            info_chek = ''
-            for txt in pay_r:
-                info_chek += f'{txt} - {pay_r.get(txt).get("Ціна")} {pay_r.get(txt).get("Валюта")}\n'
-                summ_tovar += pay_r.get(txt).get("Ціна")
-            with open(clientsPath, 'r', encoding='utf8') as file1:
-                pay_r = json.load(file1)
-            if clients_code not in pay_r:
-                msgbox(
-                    f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка: 0%',
-                    'CoffeeShop', 'Оплата', image='images\\money.gif')
-            else:
-                summ_zn = summ_tovar - (summ_tovar * (discount / 100))
-                msgbox(
-                    f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{discount}% \n Сума до оплати з урахування знижки - {summ_zn}',
-                    'CoffeeShop', 'Оплата', image='images\\money.gif')
-            payment(clients_code, pay_r, summ_tovar)
+        if clients_code not in pay_r:
+            msgbox(
+                f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка: 0%',
+                'CoffeeShop', 'Оплата', image='images\\money.gif')
+        else:
+            summ_zn = summ_tovar - (summ_tovar * (discount / 100))
+            msgbox(
+                f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{discount}% \n Сума до оплати з урахування знижки - {summ_zn}',
+                'CoffeeShop', 'Оплата', image='images\\money.gif')
+        payment(clients_code, pay_r, summ_tovar)
+    return
 
 
 def payment(clients_code, pay_r, summ_tovar):
+    print(pay_r)
     msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
     pay = buttonbox("Пройшла оплата чи ні?",'Pay',['Ok','No'])
     if pay == "Ok":
         if clients_code in pay_r:
             pay_r[clients_code]['Сума'] = pay_r[clients_code]['Сума'] + summ_tovar
             with open(clientsPath, 'w', encoding='utf8') as file1:
-                json.dump(pay_r, file1)
+                json.dump(pay_r, file1, ensure_ascii=False)
         msgbox("Оплата пройшла успішно, Приємного", image='images\\Cjey.gif')
         del_cosh = {}
         with open(koshel, 'w', encoding='utf8') as file1:
-            json.dump(del_cosh, file1)
+            json.dump(del_cosh, file1, ensure_ascii=False)
+        choice = "Відміна"
+        return choice
+
+
     else:
         time.sleep(5)
         del_cosh = {}
         with open(koshel, 'w', encoding='utf8') as file1:
-            json.dump(del_cosh, file1)
+            json.dump(del_cosh, file1, ensure_ascii=False)
 
         msgbox("Термін очікування вичерпано, вас поставлено на лічильник, наші люди йдуть до вас ,АТБ")
+        choice = "Відміна"
+        return choice
 
 def loginPesonal():
     choice_login = multenterbox("Введіть лигін та пароль", "CoffeeShop", ["Логін", "Пароль"])
