@@ -1,4 +1,9 @@
 from CoffeeShopMenu import *
+import os.path
+import random
+import time
+from easygui import *
+import json
 
 coffemenu = ('images\\c5d3533af5a86bd4966d9206c4ddaaee.gif', 'images\\da318526245381.563536837107b.gif',
              'images\\b8a2d007e93b475b92aea523f75feb92.gif')
@@ -132,3 +137,36 @@ def Payment():
             json.dump(del_cosh, file1)
 
         msgbox("Термін очікування вичерпано, вас поставлено на лічильник, наші люди йдуть до вас ,АТБ")
+
+def Product(self):
+    list_product = multenterbox("Введіть параметри продукту", "Product", ["Тип", "Назва", "Ціна", "Валюта", "Кількість"])
+    self.type_prod = list_product[0]
+    self.name = list_product[1]
+    self.price = float(list_product[2])
+    self.currency = list_product[3]
+    self.count_prod = int(list_product[4])
+    with open(inventoryPath, "r", encoding='utf-8') as menu:
+        data = json.load(menu)
+    if self.type_prod in data:
+        data[self.type_prod].update({self.name: {"Назва": self.name, "Ціна": self.price, "Валюта": self.currency, "Кількість": self.count_prod}})
+    else:
+        data[self.type_prod] = {self.name: {"Назва": self.name, "Ціна": self.price, "Валюта": self.currency, "Кількість": self.count_prod}}
+    with open(inventoryPath, "w", encoding='utf-8') as menu:
+        json.dump(data, menu, ensure_ascii=False)
+
+def LoginPesonal():
+    choice_login = multenterbox("Введіть лигін та пароль", "CoffeeShop", ["Логін", "Пароль"])
+    with open(Personal, "r", encoding='utf-8') as menu:
+        data = json.load(menu)
+    if choice_login[0] == data.get(choice_login[0])["Login"]:
+        if int(choice_login[1]) == data.get(choice_login[0])["Password"]:
+            choice = buttonbox(f"Вхід дозволено \nНаступні дії?", "CoffeeShop", ['Додати товар', "Відмінa"],
+                               image='images\\smartparcel-empty-box.gif')
+            if choice == 'Додати товар':
+                coffee1 = Product()
+            else:
+                choice = "Персонал"
+        else:
+            msgbox("Не вірно введений пароль", image='images\\giphy.gif')
+    else:
+        msgbox("Такого користувача не знайдено", image='images\\giphy.gif')
