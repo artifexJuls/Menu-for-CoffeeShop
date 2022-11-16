@@ -23,7 +23,7 @@ while True:
         with open(inventoryPath, "r", encoding='utf-8') as menu:
             base_menu = json.load(menu)
             while True:
-                choice = buttonbox("Що бажаєте купити?: ", "CoffeeShop", ['Кава', "Смаколики", "Відміна"],
+                choice = buttonbox("Що бажаєте купити?: ", "CoffeeShop", ['Кава', "Смаколики",'Оплата', "Відміна"],
                                    image='images\\763a73bb9b8e0bdf01e02f523946a313.gif')
                 if choice == "Кава":
                     coffe(choice)
@@ -31,14 +31,15 @@ while True:
                 elif choice == "Смаколики":
                     smacolik(choice)
 
-                    discount()
-                    receipt()
-                    msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
-                    # pay = input("Зчитування")
-                    payment()
                 elif choice == 'Відміна':
                     cleaning_basket()
                     break
+                elif choice == 'Оплата':
+                    discount()
+                    receipt()
+                    msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
+                    # pay = input("Зчитування чи пройшла оплата")
+                    payment()
 
     elif choice == "Персонал":
         loginPesonal()
