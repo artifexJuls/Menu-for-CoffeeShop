@@ -37,10 +37,10 @@ while True:
 
                 elif choice == 'Оплата':
                     discount()
-                    receipt()
-                    msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
+                    # receipt()
+
                     # pay = input("Зчитування чи пройшла оплата")
-                    payment()
+                    # payment()
 
     elif choice == "Персонал":
         loginPesonal()

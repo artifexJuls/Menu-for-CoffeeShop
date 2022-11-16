@@ -127,6 +127,7 @@ def discount():
         file2[key] = {'Ім`я': name, 'Знижка': 0, 'Сума': 0}
         with open(clientsPath, 'w', encoding='utf-8') as file3:
             json.dump(file2, file3, ensure_ascii=False)
+        clients_code = ""
     elif choice2 == 'Я маю знижку':
         clients_code = enterbox('Введіть свій код на знижку')
         with open(clientsPath, 'r', encoding='utf-8') as file1:
@@ -140,12 +141,14 @@ def discount():
                 name = file2.get(clients_code).get("Імя")
                 msgbox(f'{name}, знижка {discount}%')
     elif choice2 == 'Перейти до оплати':
-        pass
+        discount = 0
+        clients_code = ""
+    receipt(discount, clients_code)
 
-    return discount
+    return clients_code
 
 
-def receipt():
+def receipt(discount, clients_code):
     while True:
         with open(koshel, 'r', encoding='utf8') as file1:
             pay_r = json.load(file1)
@@ -165,9 +168,11 @@ def receipt():
                 msgbox(
                     f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{discount}% \n Сума до оплати з урахування знижки - {summ_zn}',
                     'CoffeeShop', 'Оплата', image='images\\money.gif')
+            payment(clients_code, pay_r, summ_tovar)
 
 
-def payment():
+def payment(clients_code, pay_r, summ_tovar):
+    msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
     pay = "Ok"
     if pay == "Ok":
         if clients_code in pay_r:
