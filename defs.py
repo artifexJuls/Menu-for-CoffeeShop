@@ -1,9 +1,10 @@
-from CoffeeShopMenu import *
+# from CoffeeShopMenu import *
 import os.path
 import random
 import time
 from easygui import *
 import json
+
 
 coffemenu = ('images\\c5d3533af5a86bd4966d9206c4ddaaee.gif', 'images\\da318526245381.563536837107b.gif',
              'images\\b8a2d007e93b475b92aea523f75feb92.gif')
@@ -16,21 +17,30 @@ Personal = os.path.join('data', 'Personal.json')
 with open(inventoryPath, "r", encoding='utf-8') as menu:
     base_menu = json.load(menu)
 
+def coffe(choice):
+    but = []
+    [but.append(i) for i in base_menu[choice].keys()]
+    but.append("Відміна")
+    lst = ""
+    for txt in base_menu.get(choice):
+        lst += f'{txt} - {base_menu.get(choice).get(txt).get("Ціна")} {base_menu.get(choice).get(txt).get("Валюта")}\n'
+    choise = buttonbox(lst, "CoffeeShop", but, coffemenu)
+    if choise != "Відміна":
+        counting(choice, choise)
+    elif choise == "Відміна":
+        choice = "Відміна"
+    print("choise", choise)
+    lst_menu_in_milk = ["Капучино", "Латте"]
+    if choise in lst_menu_in_milk:
+        choice_of_milk(choise)
 
-def cleaning_basket():
-    with open(koshel, "r", encoding='utf-8') as menu:
-        data = json.load(menu)
-    data.clear()
-    with open(koshel, "w", encoding='utf-8') as menu:
-        json.dump(data, menu, ensure_ascii=False)
-
-    return 'Done'
 
 
-def counting(choice):
+def counting(choice, choise):
     while True:
         amounts = enterbox(f'Скільки {choise} вам потрібно?')
         price = base_menu.get(choice).get(choise).get("Ціна")
+        print(price)
         if base_menu.get(choice).get(choise).get("Кількість") >= int(amounts):
             koshel1 = buttonbox(f"Ви додали до кошика {amounts} {choise}", "CoffeeShop", ["Далі"],
                                 image='images\\Cjey.gif')
@@ -50,18 +60,30 @@ def counting(choice):
             koshel2 = buttonbox(f"На жаль {choise}у такій кількості немає, введіть меншу", "CoffeeShop",
                                 ["Меню", "Оплата"], image='images\\giphy.gif')
 
+def cleaning_basket():
+    with open(koshel, "r", encoding='utf-8') as menu:
+        data = json.load(menu)
+    data.clear()
+    with open(koshel, "w", encoding='utf-8') as menu:
+        json.dump(data, menu, ensure_ascii=False)
 
-def choice_of_milk(choice):
-    milk = buttonbox(f"З якого молока вам приготувати {choice}", 'Milk',
+    return 'Done'
+
+
+
+
+
+def choice_of_milk(choise):
+    milk = buttonbox(f"З якого молока вам приготувати {choise}", 'Milk',
                      ['Кокосове', 'Бананове', 'Вівсяне', 'Мигдальне'], image='images\\37.gif')
     if milk == 'Кокосове':
-        msgbox(f'Ви вибрали {choice} на Кокосовому молоці')
+        msgbox(f'Ви вибрали {choise} на Кокосовому молоці')
     elif milk == 'Бананове':
-        msgbox(f'Ви вибрали {choice} на Банановому молоці', image='images\\34.gif')
+        msgbox(f'Ви вибрали {choise} на Банановому молоці', image='images\\34.gif')
     elif milk == 'Вівсяне':
-        msgbox(f'Ви вибрали {choice} на Вівсяному молоці', image='images\\36.gif')
+        msgbox(f'Ви вибрали {choise} на Вівсяному молоці', image='images\\36.gif')
     elif milk == 'Мигдальне':
-        msgbox(f'Ви вибрали {choice} на Мигдальному молоці', image='images\\35.gif')
+        msgbox(f'Ви вибрали {choise} на Мигдальному молоці', image='images\\35.gif')
 
     return 'Done'
 
@@ -138,6 +160,28 @@ def payment():
 
         msgbox("Термін очікування вичерпано, вас поставлено на лічильник, наші люди йдуть до вас ,АТБ")
 
+def loginPesonal():
+    choice_login = multenterbox("Введіть лигін та пароль", "CoffeeShop", ["Логін", "Пароль"])
+    with open(Personal, "r", encoding='utf-8') as menu:
+        data = json.load(menu)
+    if choice_login[0] == data.get(choice_login[0])["Login"]:
+        if int(choice_login[1]) == data.get(choice_login[0])["Password"]:
+            choice = buttonbox(f"Вхід дозволено \nНаступні дії?", "CoffeeShop", ['Додати товар','Склад','Видалити товар',"Відмінa"],
+                               image='images\\smartparcel-empty-box.gif')
+            if choice == 'Додати товар':
+                coffee1 = product()
+            elif choice == 'Склад':
+                storage()
+            elif choice == 'Видалити товар':
+                delete()
+            else:
+                choice = "Персонал"
+        else:
+            msgbox("Не вірний пароль", image='images\\giphy.gif')
+    else:
+        msgbox("Такого користувача не знайдено", image='images\\giphy.gif')
+
+
 def product(self):
     list_product = multenterbox("Введіть параметри продукту", "Product", ["Тип", "Назва", "Ціна", "Валюта", "Кількість"])
     self.type_prod = list_product[0]
@@ -153,20 +197,7 @@ def product(self):
         data[self.type_prod] = {self.name: {"Назва": self.name, "Ціна": self.price, "Валюта": self.currency, "Кількість": self.count_prod}}
     with open(inventoryPath, "w", encoding='utf-8') as menu:
         json.dump(data, menu, ensure_ascii=False)
-
-def loginPesonal():
-    choice_login = multenterbox("Введіть лигін та пароль", "CoffeeShop", ["Логін", "Пароль"])
-    with open(Personal, "r", encoding='utf-8') as menu:
-        data = json.load(menu)
-    if choice_login[0] == data.get(choice_login[0])["Login"]:
-        if int(choice_login[1]) == data.get(choice_login[0])["Password"]:
-            choice = buttonbox(f"Вхід дозволено \nНаступні дії?", "CoffeeShop", ['Додати товар', "Відмінa"],
-                               image='images\\smartparcel-empty-box.gif')
-            if choice == 'Додати товар':
-                coffee1 = product()
-            else:
-                choice = "Персонал"
-        else:
-            msgbox("Не вірно введений пароль", image='images\\giphy.gif')
-    else:
-        msgbox("Такого користувача не знайдено", image='images\\giphy.gif')
+def delete():
+    return 'done'
+def storage():
+    return 'done'
