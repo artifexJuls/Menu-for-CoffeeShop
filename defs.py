@@ -102,6 +102,17 @@ def cleaning_basket():
     return 'Done'
 
 
+def smacolik(choice):
+    but = []
+    [but.append(i) for i in base_menu[choice].keys()]
+    but.append("Відміна")
+    lst = ""
+    for txt in base_menu.get(choice):
+        lst += f'{txt} - {base_menu.get(choice).get(txt).get("Ціна")} {base_menu.get(choice).get(txt).get("Валюта")}\n'
+    choise = buttonbox(lst, "CoffeeShop", but, cmakolikmenu)
+    if choise != "Відміна":
+        counting(choice, choise)
+
 def discount():
     key = 0
     choice2 = buttonbox('Чи є у вас карта на знижку?', 'CoffeShop',
@@ -120,17 +131,18 @@ def discount():
         clients_code = enterbox('Введіть свій код на знижку')
         with open(clientsPath, 'r', encoding='utf-8') as file1:
             file2 = json.load(file1)
+
             if str(clients_code) in file2:
                 discount = file2.get(clients_code).get("Сума") / 500
                 if discount > 20:
                     discount = 20
 
-                name = file2.get(clients_code).get("Ім`я")
+                name = file2.get(clients_code).get("Імя")
                 msgbox(f'{name}, знижка {discount}%')
     elif choice2 == 'Перейти до оплати':
         pass
 
-    return 'Done'
+    return discount
 
 
 def receipt():

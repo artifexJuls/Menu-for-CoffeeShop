@@ -34,6 +34,7 @@ while True:
                 elif choice == 'Відміна':
                     cleaning_basket()
                     break
+
                 elif choice == 'Оплата':
                     discount()
                     receipt()
