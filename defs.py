@@ -173,7 +173,7 @@ def receipt(discount, clients_code):
 
 def payment(clients_code, pay_r, summ_tovar):
     msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
-    pay = "Ok"
+    pay = buttonbox("Пройшла оплата чи ні?",'Pay',['Ok','No'])
     if pay == "Ok":
         if clients_code in pay_r:
             pay_r[clients_code]['Сума'] = pay_r[clients_code]['Сума'] + summ_tovar
