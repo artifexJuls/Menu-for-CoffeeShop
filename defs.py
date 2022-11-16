@@ -141,15 +141,11 @@ def discount():
 
                 name = file2.get(clients_code).get("Імя")
                 msgbox(f'{name}, знижка {discount}%')
-    #elif choice2 == 'Перейти до оплати':
-        # discount = 0
-        # clients_code = 0
-    print("2")
-    lst_d_c = [discount, clients_code]
-    return lst_d_c
+
+    return clients_code
 
 
-def receipt(discount, clients_code):
+def receipt(discount):
     with open(koshel, 'r', encoding='utf8') as file1:
         pay_r = json.load(file1)
         summ_tovar = 0.0
@@ -237,11 +233,25 @@ def product(self):
     with open(inventoryPath, "w", encoding='utf-8') as menu:
         json.dump(data, menu, ensure_ascii=False)
 def delete():
-    return 'done'
+    while True:
+        with open(koshel, "r", encoding='utf-8') as koshik:
+            data = json.load(koshik)
+        choose_del = enterbox(f"{[i for i in data]}\nЯкий продукт видаляємо?")
+        choose_del2 = enterbox(f"{[i for i in data]}\nКількість продукту, який видаляємо?")
+        if data.get(choose_del).get('Кількість') < choose_del2:
+            del data[choose_del]
+        elif data.get(choose_del).get('Кількість') > choose_del2:
+            data.update({choose_del: {'Кількість': choose_del2}})
+        else:
+            continue
+        with open(koshel, 'w', encoding='utf-8') as koshik:
+            data1 = json.dump(data, koshik)
+        choice = buttonbox(f"Ваш кошик {data1}\nВидалити ще щось?', 'main', ['Так', 'Ні']")
+        if choice == 'Так':
+            return True
+        else:
+            return False
 def storage():
-    return 'done'
-
-
-# lst_d_c = [0, 0]
-# discount = lst_d_c[0]
-# clients_code = lst_d_c[1]
+    with open(koshel, "r", encoding='utf-8') as koshik:
+        data = json.load(koshik)
+    msgbox(f"{[data.get(k) [data.get(v)] for k,v in data]}")

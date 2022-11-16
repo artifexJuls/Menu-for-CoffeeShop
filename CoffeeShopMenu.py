@@ -26,7 +26,7 @@ while True:
                     break
 
                 elif choice == 'Оплата':
-                    receipt(discount, clients_code)
+                    receipt(discount)
 
     elif choice == "Персонал":
         loginPesonal()
