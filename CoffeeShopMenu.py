@@ -35,16 +35,11 @@ while True:
                         lst += f'{txt} - {base_menu.get(choice).get(txt).get("Ціна")} {base_menu.get(choice).get(txt).get("Валюта")}\n'
                     choise = buttonbox(lst, "CoffeeShop", but, coffemenu)
                     if choise != "Відміна":
-                        Counting(choice)
+                        counting(choice)
                     else:
                         continue
 
-                    Сhoice_of_milk(choice)
-                    Discount()
-                    Receipt()
-                    msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
-                    # pay = input("Зчитування")
-                    Payment()
+                    choice_of_milk(choice)
 
                 elif choice == "Смаколики":
                     but = []
@@ -55,22 +50,22 @@ while True:
                         lst += f'{txt} - {base_menu.get(choice).get(txt).get("Ціна")} {base_menu.get(choice).get(txt).get("Валюта")}\n'
                     choise = buttonbox(lst, "CoffeeShop", but, cmakolikmenu)
                     if choise != "Відміна":
-                        Counting(choice)
+                        counting(choice)
                     else:
                         continue
 
-                    Discount()
-                    Receipt()
+                    discount()
+                    receipt()
                     msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
                     # pay = input("Зчитування")
-                    Payment()
+                    payment()
 
                 elif choice == 'Відміна':
-                    Cleaning_basket()
+                    cleaning_basket()
                     break
 
     elif choice == "Персонал":
-        LoginPesonal()
+        loginPesonal()
 
 
     elif choice == 'Вихід':

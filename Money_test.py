@@ -13,7 +13,8 @@ with open(inventoryPath, "r", encoding='utf-8') as menu:
     base_menu = json.load(menu)
 
 
-        def Product(self):
+class Product:
+        def __init__(self):
             list_product = multenterbox("Введіть параметри продукту", "Product", ["Тип", "Назва", "Ціна", "Валюта", "Кількість"])
             self.type_prod = list_product[0]
             self.name = list_product[1]

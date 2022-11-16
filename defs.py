@@ -17,7 +17,7 @@ with open(inventoryPath, "r", encoding='utf-8') as menu:
     base_menu = json.load(menu)
 
 
-def Cleaning_basket():
+def cleaning_basket():
     with open(koshel, "r", encoding='utf-8') as menu:
         data = json.load(menu)
     data.clear()
@@ -27,7 +27,7 @@ def Cleaning_basket():
     return 'Done'
 
 
-def Counting(choice):
+def counting(choice):
     while True:
         amounts = enterbox(f'Скільки {choise} вам потрібно?')
         price = base_menu.get(choice).get(choise).get("Ціна")
@@ -51,7 +51,7 @@ def Counting(choice):
                                 ["Меню", "Оплата"], image='images\\giphy.gif')
 
 
-def Сhoice_of_milk(choice):
+def choice_of_milk(choice):
     milk = buttonbox(f"З якого молока вам приготувати {choice}", 'Milk',
                      ['Кокосове', 'Бананове', 'Вівсяне', 'Мигдальне'], image='images\\37.gif')
     if milk == 'Кокосове':
@@ -66,7 +66,7 @@ def Сhoice_of_milk(choice):
     return 'Done'
 
 
-def Discount():
+def discount():
     key = 0
     choice2 = buttonbox('Чи є у вас карта на знижку?', 'CoffeShop',
                         ['Бажаєте зареєструвати', 'Я маю знижку', 'Перейти до оплати'],
@@ -97,7 +97,7 @@ def Discount():
     return 'Done'
 
 
-def Receipt():
+def receipt():
     while True:
         with open(koshel, 'r', encoding='utf8') as file1:
             pay_r = json.load(file1)
@@ -119,7 +119,7 @@ def Receipt():
                     'CoffeeShop', 'Оплата', image='images\\money.gif')
 
 
-def Payment():
+def payment():
     pay = "Ok"
     if pay == "Ok":
         if clients_code in pay_r:
@@ -138,7 +138,7 @@ def Payment():
 
         msgbox("Термін очікування вичерпано, вас поставлено на лічильник, наші люди йдуть до вас ,АТБ")
 
-def Product(self):
+def product(self):
     list_product = multenterbox("Введіть параметри продукту", "Product", ["Тип", "Назва", "Ціна", "Валюта", "Кількість"])
     self.type_prod = list_product[0]
     self.name = list_product[1]
@@ -154,7 +154,7 @@ def Product(self):
     with open(inventoryPath, "w", encoding='utf-8') as menu:
         json.dump(data, menu, ensure_ascii=False)
 
-def LoginPesonal():
+def loginPesonal():
     choice_login = multenterbox("Введіть лигін та пароль", "CoffeeShop", ["Логін", "Пароль"])
     with open(Personal, "r", encoding='utf-8') as menu:
         data = json.load(menu)
@@ -163,7 +163,7 @@ def LoginPesonal():
             choice = buttonbox(f"Вхід дозволено \nНаступні дії?", "CoffeeShop", ['Додати товар', "Відмінa"],
                                image='images\\smartparcel-empty-box.gif')
             if choice == 'Додати товар':
-                coffee1 = Product()
+                coffee1 = product()
             else:
                 choice = "Персонал"
         else:
