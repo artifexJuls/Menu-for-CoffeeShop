@@ -207,7 +207,8 @@ def loginPesonal():
                 coffee1 = product()
             elif choice == 'Склад':
                 storage()
-
+            elif choice == "Видалити товар":
+                pass
             else:
                 choice = "Персонал"
         else:
@@ -216,19 +217,19 @@ def loginPesonal():
         msgbox("Такого користувача не знайдено", image='images\\giphy.gif')
 
 
-def product(self):
-    list_product = multenterbox("Введіть параметри продукту", "Product", ["Тип", "Назва", "Ціна", "Валюта", "Кількість"])
-    self.type_prod = list_product[0]
-    self.name = list_product[1]
-    self.price = float(list_product[2])
-    self.currency = list_product[3]
-    self.count_prod = int(list_product[4])
+def product():
+    name = buttonbox("Де саме ви хочете додати продукт?",'New',['Кава','Смаколики'],images='images\\99ff0608104912d023a5642ee8baf1b0.gif')
+    list_product = multenterbox("Введіть параметри продукту", "Product", ["Назва", "Ціна", "Валюта", "Кількість"])
+    type_prod = list_product[0]
+    price = float(list_product[1])
+    currency = list_product[2]
+    count_prod = int(list_product[3])
     with open(inventoryPath, "r", encoding='utf-8') as menu:
         data = json.load(menu)
-    if self.type_prod in data:
-        data[self.type_prod].update({self.name: {"Назва": self.name, "Ціна": self.price, "Валюта": self.currency, "Кількість": self.count_prod}})
+    if name in data:
+        data[name].update({type_prod: {"Назва": type_prod, "Ціна": price, "Валюта": currency, "Кількість": count_prod}})
     else:
-        data[self.type_prod] = {self.name: {"Назва": self.name, "Ціна": self.price, "Валюта": self.currency, "Кількість": self.count_prod}}
+        data[name] = {type_prod: {"Назва": type_prod, "Ціна": price, "Валюта": currency, "Кількість": count_prod}}
     with open(inventoryPath, "w", encoding='utf-8') as menu:
         json.dump(data, menu, ensure_ascii=False)
 
@@ -279,4 +280,4 @@ def storage():
     elif choose == 'Головна':
         pass
         # CoffeeShopMenu.run()
-storage()
+

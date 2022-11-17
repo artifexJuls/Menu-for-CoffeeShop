@@ -1,8 +1,3 @@
-# import json
-# import os.path
-# import random
-# import time
-# from easygui import *
 from defs import *
 
 while True:
@@ -24,6 +19,9 @@ while True:
                 elif choice == 'Відміна':
                     cleaning_basket()
                     break
+
+                elif choice == 'Переглянути кошик':
+                    print('функція')
 
                 elif choice == 'Оплата':
                     receipt(discount)
