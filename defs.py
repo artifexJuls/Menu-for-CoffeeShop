@@ -207,8 +207,7 @@ def loginPesonal():
                 coffee1 = product()
             elif choice == 'Склад':
                 storage()
-            elif choice == 'Видалити товар':
-                delete()
+
             else:
                 choice = "Персонал"
         else:
@@ -232,26 +231,52 @@ def product(self):
         data[self.type_prod] = {self.name: {"Назва": self.name, "Ціна": self.price, "Валюта": self.currency, "Кількість": self.count_prod}}
     with open(inventoryPath, "w", encoding='utf-8') as menu:
         json.dump(data, menu, ensure_ascii=False)
-def delete():
+
+
+
+def change():
     while True:
-        with open(koshel, "r", encoding='utf-8') as koshik:
+        with open(inventoryPath, "r", encoding="utf-8") as koshik:
             data = json.load(koshik)
-        choose_del = enterbox(f"{[i for i in data]}\nЯкий продукт видаляємо?")
-        choose_del2 = enterbox(f"{[i for i in data]}\nКількість продукту, який видаляємо?")
+        choose_del = enterbox(f"\nЯкий продукт змінюємо?{magic}")
+        choose_del2 = enterbox(f"{[i for i in data]}\nКількість продукту, яку треба відняти")
         if data.get(choose_del).get('Кількість') < choose_del2:
             del data[choose_del]
         elif data.get(choose_del).get('Кількість') > choose_del2:
             data.update({choose_del: {'Кількість': choose_del2}})
         else:
             continue
-        with open(koshel, 'w', encoding='utf-8') as koshik:
-            data1 = json.dump(data, koshik)
-        choice = buttonbox(f"Ваш кошик {data1}\nВидалити ще щось?', 'main', ['Так', 'Ні']")
-        if choice == 'Так':
-            return True
-        else:
-            return False
+        # with open(inventoryPath, 'w', encoding='utf-8') as koshik:
+        #     data1 = json.dump(data, koshik)
+        # choice = buttonbox(f"Ваш кошик {data1}\nВидалити ще щось?', 'main', ['Так', 'Ні']")
+        # if choice == 'Так':
+        #     return True
+        # else:
+        #     return False
+
+
+
 def storage():
-    with open(koshel, "r", encoding='utf-8') as koshik:
+    with open(inventoryPath, "r", encoding="utf-8") as koshik:
         data = json.load(koshik)
-    msgbox(f"{[data.get(k) [data.get(v)] for k,v in data]}")
+
+    smakol_count = [dat for dat in data['Смаколики']]
+    kava_count = [dat for dat in data['Кава']]
+    smakava = smakol_count + kava_count
+    a = [data['Смаколики'][i]['Кількість'] for i in smakol_count]
+    b = [data['Кава'][i]['Кількість'] for i in kava_count]
+    c = a+b
+
+    abc = []
+    for i in range(len(smakava)):
+        abc.append('\n' + smakava[i] + ' = ' + str(c[i])+'шт')
+
+    global magic
+    magic = ' '.join([i for i in abc])
+    choose = buttonbox(f"{magic}",'t',['Змінити дані складу', 'Головна'])
+    if choose == 'Змінити дані складу':
+        change()
+    elif choose == 'Головна':
+        pass
+        # CoffeeShopMenu.run()
+storage()
