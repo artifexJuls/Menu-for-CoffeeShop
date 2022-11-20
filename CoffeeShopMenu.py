@@ -1,5 +1,4 @@
 from defs import *
-
 while True:
     choice = buttonbox("Ласкаво просимо в кав'ярню", 'CoffeeShop', ['Перейти до покупки', "Персонал", 'Вихід'],
                        image='images\\212409.gif')
@@ -24,6 +23,7 @@ while True:
 
                 elif choice == 'Оплата':
                     receipt(clients_code)
+
 
     elif choice == "Персонал":
         loginPesonal()

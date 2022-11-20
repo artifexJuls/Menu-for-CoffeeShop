@@ -4,6 +4,7 @@ import time
 from easygui import *
 import json
 
+login = 0
 
 coffemenu = ('images\\c5d3533af5a86bd4966d9206c4ddaaee.gif', 'images\\da318526245381.563536837107b.gif',
              'images\\b8a2d007e93b475b92aea523f75feb92.gif')
@@ -208,25 +209,30 @@ def payment(clients_code, pay_r, summ_tovar):
         return choice
 
 def loginPesonal():
-    choice_login = multenterbox("Введіть лигін та пароль", "CoffeeShop", ["Логін", "Пароль"])
+    choice_login = multenterbox("Введіть логін та пароль", "CoffeeShop", ["Логін", "Пароль"])
     with open(Personal, "r", encoding='utf-8') as menu:
         data = json.load(menu)
     if choice_login[0] == data.get(choice_login[0])["Login"]:
         if int(choice_login[1]) == data.get(choice_login[0])["Password"]:
-            choice = buttonbox(f"Вхід дозволено \nНаступні дії?", "CoffeeShop", ['Додати товар','Склад','Видалити товар',"Відмінa"],
-                               image='images\\smartparcel-empty-box.gif')
-            if choice == 'Додати товар':
-                coffee1 = product()
-            elif choice == 'Склад':
-                storage()
-            elif choice == "Видалити товар":
-                pass
-            else:
-                choice = "Персонал"
+           return personal_do()
         else:
-            msgbox("Не вірний пароль", image='images\\giphy.gif')
+            msgbox("Не вірний пароль", image='images\giphy.gif')
     else:
-        msgbox("Такого користувача не знайдено", image='images\\giphy.gif')
+        msgbox("Такого користувача не знайдено", image='images\giphy.gif')
+
+
+def personal_do():
+    choice = buttonbox(f"Вхід дозволено \nНаступні дії?", "CoffeeShop",
+                       ['Додати товар', 'Склад', 'Видалити товар', "Відмінa"],
+                       image='images\\smartparcel-empty-box.gif')
+    if choice == 'Додати товар':
+        coffee1 = product()
+    elif choice == 'Склад':
+        storage()
+    elif choice == "Видалити товар":
+        pass
+    else:
+        choice = "Персонал"
 
 
 def product():
@@ -290,8 +296,8 @@ def storage():
     if choose == 'Змінити дані складу':
         change()
     elif choose == 'Головна':
-        pass
-        # CoffeeShopMenu.run()
+        return personal_do()
+
 
 def all_info():
     with open(koshel, 'r', encoding='utf8') as file1:
