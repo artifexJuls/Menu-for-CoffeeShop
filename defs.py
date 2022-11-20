@@ -158,7 +158,7 @@ def receipt(clients_code):
             pay_r = json.load(file1)
         if clients_code not in pay_r:
             info = f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка: 0%'
-            msgbox(info,'CoffeeShop', 'Оплата', image='images\\money.gif')
+            msgbox(info, 'CoffeeShop', 'Оплата', image='images\\money.gif')
             discount = 0
         else:
             discount = pay_r.get(clients_code).get("Сума") / 500
@@ -166,7 +166,8 @@ def receipt(clients_code):
                 discount = 20
             summ_zn = summ_tovar - (summ_tovar * (discount / 100))
             info = f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{discount}% \n Сума до оплати з урахування знижки - {summ_zn}'
-            var = buttonbox(info ,'CoffeeShop', ['Оплата', 'Повернутись до покупок', 'Видалити позиції'], image='images\\money.gif')
+            var = buttonbox(info, 'CoffeeShop', ['Оплата', 'Повернутись до покупок', 'Видалити позиції'],
+                            image='images\\money.gif')
         if var == 'Оплата':
             payment(clients_code, pay_r, summ_tovar)
         elif var == 'Повернутись до покупок':
@@ -174,6 +175,7 @@ def receipt(clients_code):
         elif var == 'Видалити позиції':
             dell_position(pay_k)
     return discount
+
 
 def dell_position(pay_k):
     var_choice = multchoicebox('Виберіть позиції для видалення', 'Delete position', pay_k.keys())
@@ -183,9 +185,10 @@ def dell_position(pay_k):
         json.dump(pay_k, file1, ensure_ascii=False)
     return "Yes"
 
+
 def payment(clients_code, pay_r, summ_tovar):
     msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
-    pay = buttonbox("Пройшла оплата чи ні?",'Pay',['Ok','No'])
+    pay = buttonbox("Пройшла оплата чи ні?", 'Pay', ['Ok', 'No'])
     if pay == "Ok":
         if clients_code in pay_r:
             pay_r[clients_code]['Сума'] = pay_r[clients_code]['Сума'] + summ_tovar
@@ -209,13 +212,14 @@ def payment(clients_code, pay_r, summ_tovar):
         choice = "Відміна"
         return choice
 
+
 def loginPesonal():
     choice_login = multenterbox("Введіть логін та пароль", "CoffeeShop", ["Логін", "Пароль"])
     with open(Personal, "r", encoding='utf-8') as menu:
         data = json.load(menu)
     if choice_login[0] == data.get(choice_login[0])["Login"]:
         if int(choice_login[1]) == data.get(choice_login[0])["Password"]:
-           return personal_do()
+            return personal_do()
         else:
             msgbox("Не вірний пароль", image='images\giphy.gif')
     else:
@@ -237,7 +241,8 @@ def personal_do():
 
 
 def product():
-    name = buttonbox("Де саме ви хочете додати продукт?",'New',['Кава','Смаколики'],images='images\\99ff0608104912d023a5642ee8baf1b0.gif')
+    name = buttonbox("Де саме ви хочете додати продукт?", 'New', ['Кава', 'Смаколики'],
+                     images='images\\99ff0608104912d023a5642ee8baf1b0.gif')
     list_product = multenterbox("Введіть параметри продукту", "Product", ["Назва", "Ціна", "Валюта", "Кількість"])
     type_prod = list_product[0]
     price = float(list_product[1])
@@ -251,7 +256,6 @@ def product():
         data[name] = {type_prod: {"Назва": type_prod, "Ціна": price, "Валюта": currency, "Кількість": count_prod}}
     with open(inventoryPath, "w", encoding='utf-8') as menu:
         json.dump(data, menu, ensure_ascii=False)
-
 
 
 def change():
@@ -275,25 +279,37 @@ def change():
         #     return False
 
 
-
 def storage():
     with open(inventoryPath, "r", encoding="utf-8") as koshik:
         data = json.load(koshik)
 
     smakol_count = [dat for dat in data['Смаколики']]
     kava_count = [dat for dat in data['Кава']]
-    smakava = smakol_count + kava_count
-    a = [data['Смаколики'][i]['Кількість'] for i in smakol_count]
-    b = [data['Кава'][i]['Кількість'] for i in kava_count]
-    c = a+b
+    smakol = [data['Смаколики'][i]['Кількість'] for i in smakol_count]
+    kava = [data['Кава'][i]['Кількість'] for i in kava_count]
 
-    abc = []
-    for i in range(len(smakava)):
-        abc.append('\n' + smakava[i] + ' = ' + str(c[i])+'шт')
+    kava_pars = []
+    smakol_pars = []
+
+    for i in range(len(smakol_count)):
+        kava_pars.append('\n'+kava_count[i] + ' = ' + str(kava[i]) + 'шт')
+        smakol_pars.append(smakol_count[i] + ' = ' + str(smakol[i]) + 'шт')
+
+    for i in range(len(kava_pars)):
+        pars = len(kava_pars[i])
+
+        if pars < 18:
+            result = 18 - len(kava_pars[i])
+            kava_pars[i] += ' ' * result
+
+    all_pars = []
+
+    for i in range(len(kava_pars)):
+        all_pars.append(kava_pars[i] + ' '*10 + smakol_pars[i])
 
     global magic
-    magic = ' '.join([i for i in abc])
-    choose = buttonbox(f"{magic}",'t',['Змінити дані складу', 'Головна'])
+    magic = ' '.join([i for i in all_pars])
+    choose = buttonbox(f"{magic}", 'Склад', ['Змінити дані складу', 'Головна'])
     if choose == 'Змінити дані складу':
         change()
     elif choose == 'Головна':
@@ -310,3 +326,6 @@ def all_info():
             summ_tovar += pay_r.get(txt).get("Ціна")
         info_chek += f'\nЗагальна сума покупки: {summ_tovar}'
     msgbox(info_chek, "info")
+
+
+storage()
