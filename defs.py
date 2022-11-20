@@ -43,9 +43,9 @@ def choice_of_milk(choise):
     milk = buttonbox(f"З якого молока вам приготувати {choise}", 'Milk',
                      ['Кокосове', 'Бананове', 'Вівсяне', 'Мигдальне','Простому'], image='images\\37.gif')
     if milk == 'Кокосове':
-        msgbox(f'Ви вибрали {choise} на Кокосовому молоці')
+        msgbox(f'Ви вибрали {choise} на Кокосовому молоці', image='images\34.gif')
     elif milk == 'Бананове':
-        msgbox(f'Ви вибрали {choise} на Банановому молоці', image='images\\34.gif')
+        msgbox(f'Ви вибрали {choise} на Банановому молоці', image='images\\33.gif')
     elif milk == 'Вівсяне':
         msgbox(f'Ви вибрали {choise} на Вівсяному молоці', image='images\\36.gif')
     elif milk == 'Мигдальне':
@@ -67,7 +67,7 @@ def smacolik(choice):
         counting(choice, choise)
 
 
-def counting(choice, choise):
+def counting(choice, choise):                               # choice - вид товару (каваб смаколики), choise - к-ть товару
     while True:
         amounts = enterbox(f'Скільки {choise} вам потрібно?')
         price = base_menu.get(choice).get(choise).get("Ціна")
@@ -116,13 +116,13 @@ def discount():
     key = 0
     print("1")
     choice2 = buttonbox('Чи є у вас карта на знижку?', 'CoffeShop',
-                        ['Бажаєте зареєструвати', 'Я маю знижку'],
+                        ['Бажаєте зареєструвати', 'Я маю знижку', 'Продовжити без знижки'],
                         image='images\\signing-icon-anim.gif')
     if choice2 == 'Бажаєте зареєструвати':
         with open(clientsPath, 'r', encoding='utf-8') as file1:
             file2 = json.load(file1)
         key = random.randrange(1000000, 9999999)
-        name = enterbox("Введіть ваше ім`я")
+        name = enterbox("Введіть ваше ім`я", cancel_choice='Відміна')
         msgbox(f'{name} Ваш код для знижки - {key}')
         file2[key] = {'Ім`я': name, 'Знижка': 0, 'Сума': 0}
         with open(clientsPath, 'w', encoding='utf-8') as file3:
@@ -141,11 +141,13 @@ def discount():
 
                 name = file2.get(clients_code).get("Імя")
                 msgbox(f'{name}, знижка {discount}%')
+    elif choice2 == 'Продовжити без знижки':
+        clients_code = 0
 
     return clients_code
 
 
-def receipt(discount):
+def receipt(clients_code):
     with open(koshel, 'r', encoding='utf8') as file1:
         pay_r = json.load(file1)
         summ_tovar = 0.0
@@ -156,17 +158,27 @@ def receipt(discount):
         with open(clientsPath, 'r', encoding='utf8') as file1:
             pay_r = json.load(file1)
         if clients_code not in pay_r:
-            msgbox(
-                f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка: 0%',
-                'CoffeeShop', 'Оплата', image='images\\money.gif')
+            info = f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка: 0%'
+            msgbox(info,'CoffeeShop', 'Оплата', image='images\\money.gif')
+            discount = 0
         else:
+            discount = pay_r.get(clients_code).get("Сума") / 500
+            if discount > 20:
+                discount = 20
             summ_zn = summ_tovar - (summ_tovar * (discount / 100))
-            msgbox(
-                f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{discount}% \n Сума до оплати з урахування знижки - {summ_zn}',
-                'CoffeeShop', 'Оплата', image='images\\money.gif')
-        payment(clients_code, pay_r, summ_tovar)
-    return
+            info = f'{info_chek} \n Загальна сума покупки = {summ_tovar} \n Ваша знижка:{discount}% \n Сума до оплати з урахування знижки - {summ_zn}'
+            var = buttonbox(info ,'CoffeeShop', ['Оплата', 'Повернутись до покупок', 'Видалити позиції'], image='images\\money.gif')
+        if var == 'Оплата':
+            payment(clients_code, pay_r, summ_tovar)
+        elif var == 'Повернутись до покупок':
+            pass
+        elif var == 'Видалити позиції':
+            dell_position(pay_r)
+    return discount
 
+def dell_position(pay_r):
+    var_choice = multchoicebox('Виберіть позиції для видалення')
+    pay_r.pop()
 
 def payment(clients_code, pay_r, summ_tovar):
     print(pay_r)
@@ -281,3 +293,13 @@ def storage():
         pass
         # CoffeeShopMenu.run()
 
+def all_info():
+    with open(koshel, 'r', encoding='utf8') as file1:
+        pay_r = json.load(file1)
+        summ_tovar = 0.0
+        info_chek = ''
+        for txt in pay_r:
+            info_chek += f'{txt} - {pay_r.get(txt).get("Ціна")} {pay_r.get(txt).get("Валюта")}\n'
+            summ_tovar += pay_r.get(txt).get("Ціна")
+        info_chek += f'\nЗагальна сума покупки: {summ_tovar}'
+    msgbox(info_chek, "info")
