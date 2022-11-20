@@ -29,7 +29,6 @@ def coffe(choice):
         counting(choice, choise)
     elif choise == "Відміна":
         choice = "Відміна"
-    print("choise", choise)
     lst_menu_in_milk = ["Капучино", "Латте", "Флет Уайт", "Раф кава"]
     if choise in lst_menu_in_milk:
         choice_of_milk(choise)
@@ -72,7 +71,6 @@ def counting(choice, choise):                               # choice - вид т
     while True:
         amounts = enterbox(f'Скільки {choise} вам потрібно?')
         price = base_menu.get(choice).get(choise).get("Ціна")
-        print(price)
         if base_menu.get(choice).get(choise).get("Кількість") >= int(amounts):
             koshel1 = buttonbox(f"Ви додали до кошика {amounts} {choise}", "CoffeeShop", ["Далі"],
                                 image='images\\Cjey.gif')
@@ -112,10 +110,10 @@ def smacolik(choice):
     choise = buttonbox(lst, "CoffeeShop", but, cmakolikmenu)
     if choise != "Відміна":
         counting(choice, choise)
+    return "Yes"
 
 def discount():
     key = 0
-    print("1")
     choice2 = buttonbox('Чи є у вас карта на знижку?', 'CoffeShop',
                         ['Бажаєте зареєструвати', 'Я маю знижку', 'Продовжити без знижки'],
                         image='images\\signing-icon-anim.gif')
@@ -150,12 +148,12 @@ def discount():
 
 def receipt(clients_code):
     with open(koshel, 'r', encoding='utf8') as file1:
-        pay_r = json.load(file1)
+        pay_k = json.load(file1)
         summ_tovar = 0.0
         info_chek = ''
-        for txt in pay_r:
-            info_chek += f'{txt} - {pay_r.get(txt).get("Ціна")} {pay_r.get(txt).get("Валюта")}\n'
-            summ_tovar += pay_r.get(txt).get("Ціна")
+        for txt in pay_k:
+            info_chek += f'{txt} - {pay_k.get(txt).get("Ціна")} {pay_k.get(txt).get("Валюта")}\n'
+            summ_tovar += pay_k.get(txt).get("Ціна")
         with open(clientsPath, 'r', encoding='utf8') as file1:
             pay_r = json.load(file1)
         if clients_code not in pay_r:
@@ -174,15 +172,18 @@ def receipt(clients_code):
         elif var == 'Повернутись до покупок':
             pass
         elif var == 'Видалити позиції':
-            dell_position(pay_r)
+            dell_position(pay_k)
     return discount
 
-def dell_position(pay_r):
-    var_choice = multchoicebox('Виберіть позиції для видалення')
-    pay_r.pop()
+def dell_position(pay_k):
+    var_choice = multchoicebox('Виберіть позиції для видалення', 'Delete position', pay_k.keys())
+    for i in var_choice:
+        pay_k.pop(i)
+    with open(koshel, 'w', encoding='utf8') as file1:
+        json.dump(pay_k, file1, ensure_ascii=False)
+    return "Yes"
 
 def payment(clients_code, pay_r, summ_tovar):
-    print(pay_r)
     msgbox("Відскануйте QR код для оплати", image='images\\56.gif')
     pay = buttonbox("Пройшла оплата чи ні?",'Pay',['Ok','No'])
     if pay == "Ok":
