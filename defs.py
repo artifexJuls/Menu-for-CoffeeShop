@@ -4,7 +4,6 @@ import time
 from easygui import *
 import json
 
-login = 0
 
 coffemenu = ('images\\c5d3533af5a86bd4966d9206c4ddaaee.gif', 'images\\da318526245381.563536837107b.gif',
              'images\\b8a2d007e93b475b92aea523f75feb92.gif')
@@ -213,7 +212,7 @@ def payment(clients_code, pay_r, summ_tovar):
         return choice
 
 
-def loginPesonal():
+def loginPersonal():
     choice_login = multenterbox("Введіть логін та пароль", "CoffeeShop", ["Логін", "Пароль"])
     with open(Personal, "r", encoding='utf-8') as menu:
         data = json.load(menu)
@@ -228,21 +227,21 @@ def loginPesonal():
 
 def personal_do():
     choice = buttonbox(f"Вхід дозволено \nНаступні дії?", "CoffeeShop",
-                       ['Додати товар', 'Склад', 'Видалити товар', "Відмінa"],
+                       ['Склад', "Головна"],
                        image='images\\smartparcel-empty-box.gif')
-    if choice == 'Додати товар':
-        coffee1 = product()
-    elif choice == 'Склад':
+    if choice == 'Склад':
         storage()
-    elif choice == "Видалити товар":
-        pass
+    elif choice == 'Головна':
+        return 'Ok'
     else:
-        choice = "Персонал"
+        personal_do()
 
 
 def product():
-    name = buttonbox("Де саме ви хочете додати продукт?", 'New', ['Кава', 'Смаколики'],
+    name = buttonbox("Де саме ви хочете додати продукт?", 'New', ['Кава', 'Смаколики', 'Назад'],
                      images='images\\99ff0608104912d023a5642ee8baf1b0.gif')
+    if name == 'Назад':
+        return storage()
     list_product = multenterbox("Введіть параметри продукту", "Product", ["Назва", "Ціна", "Валюта", "Кількість"])
     type_prod = list_product[0]
     price = float(list_product[1])
@@ -262,7 +261,7 @@ def change():
     while True:
         with open(inventoryPath, "r", encoding="utf-8") as koshik:
             data = json.load(koshik)
-        choose_del = enterbox(f"\nЯкий продукт змінюємо?{magic}")
+        choose_del = enterbox(f"\nВведіть назву продукту для зміни?")
         choose_del2 = enterbox(f"{[i for i in data]}\nКількість продукту, яку треба відняти")
         if data.get(choose_del).get('Кількість') < choose_del2:
             del data[choose_del]
@@ -309,11 +308,15 @@ def storage():
 
     global magic
     magic = ' '.join([i for i in all_pars])
-    choose = buttonbox(f"{magic}", 'Склад', ['Змінити дані складу', 'Головна'])
-    if choose == 'Змінити дані складу':
-        change()
-    elif choose == 'Головна':
+    choose = buttonbox(f"{magic}", 'Склад', ['Назад', 'Додати товар', 'Відняти товар', 'Головна'])
+    if choose == 'Назад':
         return personal_do()
+    elif choose == 'Додати товар':
+        product()
+    elif choose == 'Відняти товар':
+        return change()
+    elif choose == 'Головна':
+        return 'Ok'
 
 
 def all_info():
@@ -326,6 +329,3 @@ def all_info():
             summ_tovar += pay_r.get(txt).get("Ціна")
         info_chek += f'\nЗагальна сума покупки: {summ_tovar}'
     msgbox(info_chek, "info")
-
-
-storage()
