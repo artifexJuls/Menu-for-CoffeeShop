@@ -315,7 +315,6 @@ def storage():
     elif choose == 'Головна':
         return 'Ok'
 
-storage()
 
 
 def all_info():
