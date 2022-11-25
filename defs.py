@@ -258,7 +258,6 @@ def product():
 
 
 def change(do):
-    print(do)
     while True:
         with open(inventoryPath, "r", encoding="utf-8") as koshik:
             data = json.load(koshik)
@@ -270,14 +269,12 @@ def change(do):
             data.get(choose_del[0]).get(choose_del[1])['Кількість'] -= int(choose_del[2])
         with open(inventoryPath, "w", encoding="utf-8") as koshik:
             json.dump(data, koshik, ensure_ascii=False)
-
-
+        return 'ok'
 
 
 def storage():
     with open(inventoryPath, "r", encoding="utf-8") as koshik:
         data = json.load(koshik)
-
     smakol_count = [dat for dat in data['Смаколики']]
     kava_count = [dat for dat in data['Кава']]
     smakol = [data['Смаколики'][i]['Кількість'] for i in smakol_count]
@@ -314,7 +311,6 @@ def storage():
         change('Відняти')
     elif choose == 'Головна':
         return 'Ok'
-
 
 
 def all_info():
