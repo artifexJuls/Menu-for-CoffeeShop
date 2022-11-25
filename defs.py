@@ -257,25 +257,21 @@ def product():
         json.dump(data, menu, ensure_ascii=False)
 
 
-def change():
+def change(do):
+    print(do)
     while True:
         with open(inventoryPath, "r", encoding="utf-8") as koshik:
             data = json.load(koshik)
-        choose_del = enterbox(f"\nВведіть назву продукту для зміни?")
-        choose_del2 = enterbox(f"{[i for i in data]}\nКількість продукту, яку треба відняти")
-        if data.get(choose_del).get('Кількість') < choose_del2:
-            del data[choose_del]
-        elif data.get(choose_del).get('Кількість') > choose_del2:
-            data.update({choose_del: {'Кількість': choose_del2}})
-        else:
-            continue
-        # with open(inventoryPath, 'w', encoding='utf-8') as koshik:
-        #     data1 = json.dump(data, koshik)
-        # choice = buttonbox(f"Ваш кошик {data1}\nВидалити ще щось?', 'main', ['Так', 'Ні']")
-        # if choice == 'Так':
-        #     return True
-        # else:
-        #     return False
+        choose_del = multenterbox(f"Введіть назву продукту для того щоб {do}", 'change',
+                                  ['Тип продукту(Кава\Смаколики)', 'Продукт', 'Кількість'])
+        if do == 'Додати':
+            data.get(choose_del[0]).get(choose_del[1])['Кількість'] += int(choose_del[2])
+        elif do == 'Відняти':
+            data.get(choose_del[0]).get(choose_del[1])['Кількість'] -= int(choose_del[2])
+        with open(inventoryPath, "w", encoding="utf-8") as koshik:
+            json.dump(data, koshik, ensure_ascii=False)
+
+
 
 
 def storage():
@@ -309,14 +305,17 @@ def storage():
     global magic
     magic = ' '.join([i for i in all_pars])
     choose = buttonbox(f"{magic}", 'Склад', ['Назад', 'Додати товар', 'Відняти товар', 'Головна'])
+
     if choose == 'Назад':
         return personal_do()
     elif choose == 'Додати товар':
-        product()
+        change('Додати')
     elif choose == 'Відняти товар':
-        return change()
+        change('Відняти')
     elif choose == 'Головна':
         return 'Ok'
+
+storage()
 
 
 def all_info():
