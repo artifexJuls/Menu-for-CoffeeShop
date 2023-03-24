@@ -1,5 +1,6 @@
 from defs import *
 
+
 def main():
     while True:
         choice = buttonbox("Ласкаво просимо в кав'ярню", 'CoffeeShop', ['Перейти до покупки', "Персонал", 'Вихід'],
